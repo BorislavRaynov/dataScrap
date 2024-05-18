@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
-    'dataScrap.data_scrap_api'
+    'dataScrap.data_scrap_api',
 ]
 
 MIDDLEWARE = [

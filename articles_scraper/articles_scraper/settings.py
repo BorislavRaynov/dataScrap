@@ -12,20 +12,23 @@ BOT_NAME = "articles_scraper"
 SPIDER_MODULES = ["articles_scraper.spiders"]
 NEWSPIDER_MODULE = "articles_scraper.spiders"
 
+ITEM_PIPELINES = {
+   'articles_scraper.pipelines.ArticlesScraperPipeline': 300,
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "articles_scraper (+http://www.yourdomain.com)"
+# USER_AGENT = "articles_scraper (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+# CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+# DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16

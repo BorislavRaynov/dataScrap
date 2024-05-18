@@ -1,28 +1,42 @@
 import os
 import django
 import json
-from scrapy.crawler import CrawlerProcess
-from articles_scraper.articles_scraper.spiders.restofworld import RestOfWorldSpider
-from articles_scraper.articles_scraper.spiders.capitalbrief import CapitalBriefSpider
-from dataScrap.data_scrap_api.models import Article
+from dataScrap import settings as django_settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'articles_api.settings')
+# Setup Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_settings')
 django.setup()
 
 
-process = CrawlerProcess(settings={
-    'FEEDS': {
-        'items.json': {'format': 'json'},
-    },
-})
-
-process.crawl(RestOfWorldSpider)
-process.crawl(CapitalBriefSpider)
-process.start()
+from dataScrap.data_scrap_api.models import Article
 
 
-with open('items.json') as f:
-    articles = json.load(f)
-    for article_data in articles:
-        article = Article(**article_data)
-        article.save()
+def transfer_data():
+    # Path to the JSON file containing scraped data
+    json_file_path = 'items.json'
+
+    # Read and process the JSON file
+    with open(json_file_path, 'r') as file:
+        data = json.load(file)
+
+        # Loop through each item in the JSON data
+        for item in data:
+            # Check if the article already exists to avoid duplicates
+            if not Article.objects.filter(url=item['url']).exists():
+                # Create a new Article object and save it to the database
+                article = Article(
+                    title=item['title'],
+                    body=item['body'],
+                    url=item['url'],
+                    publication_date=item['publication_date'],
+                    author=item['author'],
+                    image_urls=item['image_urls'],
+                    entities=item['entities']
+                )
+                article.save()
+
+    print("Data transfer completed successfully.")
+
+
+if __name__ == "__main__":
+    transfer_data()

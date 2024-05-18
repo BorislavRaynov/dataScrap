@@ -43,7 +43,6 @@ article_schema = {
 class ArticlesScraperPipeline:
 
     def process_item(self, item, spider):
-        # Validate the item
         try:
             validate(instance=item, schema=article_schema)
         except ValidationError as e:

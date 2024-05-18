@@ -24,10 +24,8 @@ class CapitalBriefSpider(scrapy.Spider):
         author = response.css('span.author::text').get()
         image_urls = response.css('div.article-body img::attr(src)').getall()
 
-        # Clean body text
         body_text = BeautifulSoup(body, 'html.parser').get_text()
 
-        # Parse publication date and time if necessary
         if publication_date_str:
             try:
                 publication_date = datetime.fromisoformat(publication_date_str)

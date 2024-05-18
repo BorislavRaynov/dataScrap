@@ -24,7 +24,6 @@ class RestOfWorldSpider(scrapy.Spider):
         author = response.css('span.author::text').get()
         image_urls = response.css('div.article-body img::attr(src)').getall()
 
-        # Clean body text
         body_text = BeautifulSoup(body, 'html.parser').get_text()
 
         if publication_date_str:

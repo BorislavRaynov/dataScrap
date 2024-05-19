@@ -1,6 +1,4 @@
 import scrapy
-import spacy
-from bs4 import BeautifulSoup
 from articles_scraper.items import ArticleItem
 
 
@@ -8,7 +6,7 @@ class CapitalBriefSpider(scrapy.Spider):
     name = 'capitalbrief'
     start_urls = ['https://www.capitalbrief.com/technology/']
 
-    def parse(self, response):
+    def parse(self, response, *args, **kwargs):
         articles = response.css('article')
         for article in articles:
             article_url = article.css('a::attr(href)').get()
@@ -23,9 +21,10 @@ class CapitalBriefSpider(scrapy.Spider):
         author = response.css('.author::text').get()
         image_urls = response.css('img::attr(src)').getall()
 
-        # nlp = spacy.load("en_core_web_sm")
-        # doc = nlp(body_text)
-        # entities = [(ent.text, ent.label_) for ent in doc.ents]
+        title = title.strip() if title else ''
+        body = body.strip() if body else 'no body'
+        author = author.replace('\xa0', ' ').strip() if author else 'no author'
+        image_urls = [url.strip() for url in image_urls]
 
         item = ArticleItem(
             title=title,
@@ -34,7 +33,6 @@ class CapitalBriefSpider(scrapy.Spider):
             publication_date=publication_date_str,
             author=author,
             image_urls=image_urls,
-            # entities=entities
         )
 
         yield item

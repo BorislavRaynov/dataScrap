@@ -18,23 +18,23 @@ article_schema = {
         "title": {"type": "string", "minLength": 1},
         "body": {"type": "string", "minLength": 1},
         "url": {"type": "string", "format": "uri"},
-        "publication_date": {"type": "string", "format": "date-time"},
+        "publication_date": {"type": "string"},
         "author": {"type": "string", "minLength": 1},
         "image_urls": {
             "type": "array",
             "items": {"type": "string", "format": "uri"}
         },
-        "entities": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "text": {"type": "string"},
-                    "label": {"type": "string"}
-                },
-                "required": ["text", "label"]
-            }
-        }
+        # "entities": {
+        #     "type": "array",
+        #     "items": {
+        #         "type": "object",
+        #         "properties": {
+        #             "text": {"type": "string"},
+        #             "label": {"type": "string"}
+        #         },
+        #         "required": ["text", "label"]
+        #     }
+        # }
     },
     "required": ["title", "body", "url", "publication_date", "author"]
 }
@@ -57,7 +57,7 @@ class ArticlesScraperPipeline:
                 publication_date=item['publication_date'],
                 author=item['author'],
                 image_urls=item['image_urls'],
-                entities=item['entities']
+                # entities=item['entities']
             )
             article.save()
 

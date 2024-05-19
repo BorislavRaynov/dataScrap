@@ -15,7 +15,7 @@ class CapitalBriefSpider(scrapy.Spider):
 
     def parse_article(self, response):
         title = response.css('h1::text').get()
-        body = response.css('h2::text').get()
+        body = response.css('section p::text').get()
         url = response.url
         publication_date_str = response.css('time::attr(datetime)').get()
         author = response.css('.author::text').get()

@@ -141,3 +141,5 @@ Scripts
 .idea
 postgresql
 staticfiles
+/capitalbrief_articles.json
+/restofworld_articles.json

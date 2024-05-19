@@ -21,6 +21,8 @@ ROBOTSTXT_OBEY = True
 
 ITEM_PIPELINES = {
     'articles_scraper.pipelines.ArticlesScraperPipeline': 300,
+    'articles_scraper.pipelines.DuplicatesPipeline': 350,
+    'articles_scraper.pipelines.JsonWriterPipeline': 300,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)

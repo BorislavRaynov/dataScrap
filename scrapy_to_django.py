@@ -10,10 +10,10 @@ django.setup()
 from dataScrap.data_scrap_api.models import Article
 
 
-def transfer_data():
-    json_file_path = 'articles.json'
+def transfer_data(spider_name: str):
+    json_file_path = f"{spider_name}_articles.json"
 
-    with open(json_file_path, 'r') as file:
+    with open(json_file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
 
         for item in data:
@@ -31,6 +31,7 @@ def transfer_data():
 
 
 if __name__ == "__main__":
-    subprocess.run(["scrapy", "crawl", "capitalbrief", "-o", "articles.json"])
-    # subprocess.run(["scrapy", "crawl", "restofworld", "-o", "articles.json"])
-    transfer_data()
+    subprocess.run(["scrapy", "crawl", "capitalbrief", "-o", "capitalbrief_articles.json"])
+    subprocess.run(["scrapy", "crawl", "restofworld", "-o", "restofworld_articles.json"])
+    transfer_data("capitalbrief")
+    transfer_data("restofworld")

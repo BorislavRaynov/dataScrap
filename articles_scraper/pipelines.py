@@ -1,13 +1,6 @@
-import os
-import django
 from jsonschema import validate, ValidationError
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dataScrap.settings')
-django.setup()
-
-
-# from dataScrap.data_scrap_api.models import Article
-
+from scrapy.exceptions import DropItem
+import json
 
 article_schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -32,18 +25,33 @@ class ArticlesScraperPipeline:
     def process_item(self, item, spider):
         try:
             validate(instance=item, schema=article_schema)
-        except ValidationError as e:
-            spider.logger.error(f"Validation error: {e.message}")
-            raise ValidationError(f"Invalid item found: {item}")
+        except ValidationError:
+            raise DropItem(f"Invalid item found: {item}")
+        return item
 
-        # if not Article.objects.filter(url=item['url']).exists():
-        #     Article.objects.create(
-        #         title=item['title'],
-        #         body=item['body'],
-        #         url=item['url'],
-        #         publication_date=item['publication_date'],
-        #         author=item['author'],
-        #         image_urls=item['image_urls'],
-        #     )
 
+class DuplicatesPipeline:
+
+    def __init__(self):
+        self.urls_seen = set()
+
+    def process_item(self, item, spider):
+        if item['url'] in self.urls_seen:
+            raise DropItem(f"Duplicate item found: {item['url']}")
+        else:
+            self.urls_seen.add(item['url'])
+            return item
+
+
+class JsonWriterPipeline:
+
+    def open_spider(self, spider):
+        self.file = open(f'{spider.name}_articles.json', 'a', encoding='utf-8')
+
+    def close_spider(self, spider):
+        self.file.close()
+
+    def process_item(self, item, spider):
+        line = json.dumps(dict(item), ensure_ascii=False) + ",\n"
+        self.file.write(line)
         return item

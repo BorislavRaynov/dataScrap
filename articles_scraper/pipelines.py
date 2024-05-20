@@ -44,15 +44,20 @@ class ArticlesScraperPipeline:
 
 
 class DuplicatesPipeline:
-
     def __init__(self):
         self.urls_seen = set()
+        self.min_articles = 20
 
     def process_item(self, item, spider):
         if item['url'] in self.urls_seen:
             raise DropItem(f"Duplicate item found: {item['url']}")
+
         else:
             self.urls_seen.add(item['url'])
+
+            if len(self.urls_seen) >= self.min_articles:
+                raise DropItem("Reached the minimum number of articles required")
+
             return item
 
 

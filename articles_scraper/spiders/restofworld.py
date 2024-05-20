@@ -10,9 +10,13 @@ class RestOfWorldSpider(scrapy.Spider):
         articles = response.css('article')
         for article in articles:
             article_url = article.css('a::attr(href)').get()
-            print(article_url)
             if article_url:
                 yield response.follow(article_url, self.parse_article)
+
+            else:
+                prev_page = response.css('div.nav-previous a::attr(href)').get()
+                if prev_page:
+                    yield response.follow(prev_page, self.parse)
 
     def parse_article(self, response):
         title = response.css('#headline::text').get()
@@ -23,10 +27,10 @@ class RestOfWorldSpider(scrapy.Spider):
         author = response.css('.author::text').get()
         image_urls = response.css('img::attr(src)').getall()
 
-        title = title.strip() if title else ''
-        body = body.strip() if body else 'no body'
-        author = author.replace('\xa0', ' ').strip() if author else 'no author'
-        image_urls = [url.strip() for url in image_urls]
+        title = title.strip()
+        body = body.strip()
+        if image_urls:
+            image_urls = [url.strip() for url in image_urls]
 
         item = ArticleItem(
             title=title,

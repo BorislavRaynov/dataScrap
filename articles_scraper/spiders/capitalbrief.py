@@ -26,10 +26,11 @@ class CapitalBriefSpider(scrapy.Spider):
         author = response.css('.author::text').get()
         image_urls = response.css('img::attr(src)').getall()
 
-        title = title.strip() if title else ''
-        body = body.strip() if body else 'no body'
-        author = author.replace('\xa0', ' ').strip() if author else 'no author'
-        image_urls = [url.strip() for url in image_urls]
+        title = title.strip()
+        body = body.strip()
+        author = author.replace('\xa0', ' ').strip()
+        if image_urls:
+            image_urls = [url.strip() for url in image_urls]
 
         item = ArticleItem(
             title=title,

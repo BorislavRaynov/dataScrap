@@ -9,3 +9,4 @@ class Article(models.Model):
     publication_date = models.DateTimeField()
     author = models.CharField(max_length=255)
     image_urls = models.JSONField()
+    entities = models.JSONField()

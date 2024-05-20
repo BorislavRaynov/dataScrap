@@ -25,13 +25,14 @@ def transfer_data(spider_name: str):
                     publication_date=item['publication_date'],
                     author=item['author'],
                     image_urls=item['image_urls'],
+                    entities=item.get('entities', [])
                 )
 
     print("Data transfer completed successfully.")
 
 
 if __name__ == "__main__":
-    subprocess.run(["scrapy", "crawl", "capitalbrief", "-o", "capitalbrief_articles.json"])
+    # subprocess.run(["scrapy", "crawl", "capitalbrief", "-o", "capitalbrief_articles.json"])
     subprocess.run(["scrapy", "crawl", "restofworld", "-o", "restofworld_articles.json"])
-    transfer_data("capitalbrief")
+    # transfer_data("capitalbrief")
     transfer_data("restofworld")

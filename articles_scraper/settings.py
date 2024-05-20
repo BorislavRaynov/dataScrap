@@ -20,9 +20,9 @@ NEWSPIDER_MODULE = "articles_scraper.spiders"
 ROBOTSTXT_OBEY = True
 
 ITEM_PIPELINES = {
-    'articles_scraper.pipelines.ArticlesScraperPipeline': 300,
-    'articles_scraper.pipelines.DuplicatesPipeline': 350,
-    'articles_scraper.pipelines.JsonWriterPipeline': 300,
+    'articles_scraper.pipelines.ArticlesScraperPipeline': 100,
+    'articles_scraper.pipelines.DuplicatesPipeline': 200,
+    'articles_scraper.pipelines.NERPipeline': 300,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -66,15 +66,9 @@ ITEM_PIPELINES = {
 #    "scrapy.extensions.telnet.TelnetConsole": None,
 #}
 
-# Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "articles_scraper.pipelines.ArticlesScraperPipeline": 300,
-#}
-
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+# AUTOTHROTTLE_ENABLED = True
 # The initial download delay
 #AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies

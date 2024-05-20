@@ -1,6 +1,8 @@
+import spacy
 from jsonschema import validate, ValidationError
 from scrapy.exceptions import DropItem
-import json
+
+nlp = spacy.load("en_core_web_sm")
 
 article_schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -15,6 +17,17 @@ article_schema = {
             "type": "array",
             "items": {"type": "string", "format": "uri"}
         },
+        "entities": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "text": {"type": "string"},
+                    "label": {"type": "string"}
+                },
+                "required": ["text", "label"]
+            }
+        }
     },
     "required": ["title", "body", "url", "publication_date", "author"]
 }
@@ -43,15 +56,10 @@ class DuplicatesPipeline:
             return item
 
 
-class JsonWriterPipeline:
-
-    def open_spider(self, spider):
-        self.file = open(f'{spider.name}_articles.json', 'a', encoding='utf-8')
-
-    def close_spider(self, spider):
-        self.file.close()
+class NERPipeline:
 
     def process_item(self, item, spider):
-        line = json.dumps(dict(item), ensure_ascii=False) + ",\n"
-        self.file.write(line)
+        doc = nlp(item['body'])
+        entities = [{"text": ent.text, "label": ent.label_} for ent in doc.ents]
+        item['entities'] = entities
         return item

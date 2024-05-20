@@ -5,13 +5,23 @@ from articles_scraper.items import ArticleItem
 class CapitalBriefSpider(scrapy.Spider):
     name = 'capitalbrief'
     start_urls = ['https://www.capitalbrief.com/technology/']
+    articles_count = 0
+    min_articles = 20
 
     def parse(self, response, *args, **kwargs):
         articles = response.css('article')
         for article in articles:
-            article_url = article.css('a::attr(href)').get()
-            if article_url:
-                yield response.follow(article_url, self.parse_article)
+            if self.articles_count < self.min_articles:
+                article_url = article.css('a::attr(href)').get()
+                if article_url:
+                    yield response.follow(article_url, self.parse_article)
+            else:
+                break
+
+        # if self.articles_count < self.min_articles:
+        #     next_page = response.css('a.next::attr(href)').get()
+        #     if next_page:
+        #         yield response.follow(next_page, self.parse)
 
     def parse_article(self, response):
         title = response.css('h1::text').get()

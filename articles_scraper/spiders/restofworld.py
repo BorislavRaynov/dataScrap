@@ -10,11 +10,13 @@ class RestOfWorldSpider(scrapy.Spider):
         articles = response.css('article')
         for article in articles:
             article_url = article.css('a::attr(href)').get()
+            print(article_url)
             if article_url:
                 yield response.follow(article_url, self.parse_article)
 
     def parse_article(self, response):
-        title = response.css('h1::text').get()
+        title = response.css('#headline::text').get()
+        print(title)
         body = response.css('h3::text').get()
         url = response.url
         publication_date_str = response.css('time::attr(datetime)').get()

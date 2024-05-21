@@ -46,7 +46,6 @@ class ArticlesScraperPipeline:
 class DuplicatesPipeline:
     def __init__(self):
         self.urls_seen = set()
-        self.min_articles = 20
 
     def process_item(self, item, spider):
         if item['url'] in self.urls_seen:
@@ -55,10 +54,7 @@ class DuplicatesPipeline:
         else:
             self.urls_seen.add(item['url'])
 
-            if len(self.urls_seen) >= self.min_articles:
-                raise DropItem("Reached the minimum number of articles required")
-
-            return item
+        return item
 
 
 class NERPipeline:
@@ -67,4 +63,16 @@ class NERPipeline:
         doc = nlp(item['body'])
         entities = [{"text": ent.text, "label": ent.label_} for ent in doc.ents]
         item['entities'] = entities
+        return item
+
+
+class ItemCountPipeline:
+    def __init__(self):
+        self.item_count = 0
+        self.min_items = 20
+
+    def process_item(self, item, spider):
+        self.item_count += 1
+        if self.item_count >= self.min_items:
+            spider.crawler.engine.close_spider(spider, 'collected_minimum_items')
         return item

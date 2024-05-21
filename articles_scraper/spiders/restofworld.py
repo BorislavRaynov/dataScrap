@@ -7,20 +7,17 @@ class RestOfWorldSpider(scrapy.Spider):
     start_urls = ['https://restofworld.org/series/the-rise-of-ai/']
 
     def parse(self, response, *args, **kwargs):
-        articles = response.css('article')
+        articles = response.css("article")
         for article in articles:
-            article_url = article.css('a::attr(href)').get()
-            if article_url:
-                yield response.follow(article_url, self.parse_article)
+            article_url = article.css("a::attr(href)").get()
+            yield response.follow(article_url, self.parse_article)
 
-            else:
-                prev_page = response.css('div.nav-previous a::attr(href)').get()
-                if prev_page:
-                    yield response.follow(prev_page, self.parse)
+        previous_page = response.css('div.nav-previous::attr(href)').get()
+        if previous_page is not None:
+            yield response.follow(previous_page, self.parse)
 
     def parse_article(self, response):
         title = response.css('#headline::text').get()
-        print(title)
         body = response.css('h3::text').get()
         url = response.url
         publication_date_str = response.css('time::attr(datetime)').get()
@@ -29,6 +26,7 @@ class RestOfWorldSpider(scrapy.Spider):
 
         title = title.strip()
         body = body.strip()
+
         if image_urls:
             image_urls = [url.strip() for url in image_urls]
 

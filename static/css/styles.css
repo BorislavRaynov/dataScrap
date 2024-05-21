@@ -1,0 +1,14 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+.article {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+}
+.pagination {
+    margin-top: 20px;
+}
+.pagination button {
+    margin-right: 5px;
+}

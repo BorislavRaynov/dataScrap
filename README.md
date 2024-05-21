@@ -1,6 +1,10 @@
 Python application that extract, transform, load (ETL) and deliver data.
 
 ---
+IN PROGRESS...
+---
+
+---
 HOW TO SET UP AND RUN THE APP
 ---
 1: Running the app on Ubuntu:

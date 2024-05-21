@@ -6,8 +6,12 @@ class RestOfWorldSpider(scrapy.Spider):
     name = 'restofworld'
     start_urls = ['https://restofworld.org/series/the-rise-of-ai/']
 
+    custom_settings = {
+        'DOWNLOAD_DELAY': 2,
+    }
+
     def parse(self, response, *args, **kwargs):
-        articles = response.css("article")
+        articles = response.css('article')
         for article in articles:
             article_url = article.css("a::attr(href)").get()
             yield response.follow(article_url, self.parse_article)

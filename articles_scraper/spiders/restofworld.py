@@ -11,12 +11,12 @@ class RestOfWorldSpider(scrapy.Spider):
     }
 
     def parse(self, response, *args, **kwargs):
-        articles = response.css('article')
-        for article in articles:
-            article_url = article.css("a::attr(href)").get()
+
+        article_urls = response.css(".article-link::attr(href)").getall()
+        for article_url in article_urls:
             yield response.follow(article_url, self.parse_article)
 
-        previous_page = response.css('div.nav-previous::attr(href)').get()
+        previous_page = response.css('.nav-previous a::attr(href)').get()
         if previous_page is not None:
             yield response.follow(previous_page, self.parse)
 

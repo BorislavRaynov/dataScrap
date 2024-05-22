@@ -53,8 +53,7 @@ class DuplicatesPipeline:
 
         else:
             self.urls_seen.add(item['url'])
-
-        return item
+            return item
 
 
 class NERPipeline:
@@ -74,5 +73,5 @@ class ItemCountPipeline:
     def process_item(self, item, spider):
         self.item_count += 1
         if self.item_count >= self.min_items:
-            spider.crawler.engine.close_spider(spider, 'collected_minimum_items')
+            spider.crawler.engine.close_spider(spider, 'minimum_items_collected')
         return item

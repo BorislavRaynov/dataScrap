@@ -7,8 +7,7 @@ async function fetchArticles(page = 1, search = '') {
         url += `&search=${search}`;
     }
     let response = await fetch(url);
-    let data = await response.json();
-    return data;
+    return await response.json();
 }
 
     function renderArticles(articles) {

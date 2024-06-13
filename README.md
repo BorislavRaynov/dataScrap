@@ -19,3 +19,4 @@ HOW TO SET UP AND RUN THE APP
 
     - localhost:8000/api/articles/
     - partial functionality on localhost:8000
+---
